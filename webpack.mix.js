@@ -1,15 +1,38 @@
-let mix = require('laravel-mix');
+const { mix } = require("laravel-mix");
+require("laravel-mix-merge-manifest");
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
+var publicPath = "../../../resources/themes/velocity/assets";
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+if (mix.inProduction()) {
+    publicPath = 'publishable/assets';
+}
+
+publicPath = 'publishable/assets';
+
+mix.setPublicPath(publicPath).mergeManifest();
+mix.disableNotifications();
+
+mix
+    .js(
+        __dirname + "/src/Resources/assets/js/app.js",
+        "js/velocity.js"
+    )
+
+    .sass(
+        __dirname + '/src/Resources/assets/sass/admin.scss',
+        __dirname + '/' + publicPath + '/css/velocity-admin.css'
+    )
+    .sass(
+        __dirname + '/src/Resources/assets/sass/app.scss',
+        __dirname + '/' + publicPath + '/css/velocity.css', {
+            includePaths: ['node_modules/bootstrap-sass/assets/stylesheets/'],
+        }
+    )
+
+    .options({
+        processCssUrls: false
+    });
+
+if (mix.inProduction()) {
+    mix.version();
+}
