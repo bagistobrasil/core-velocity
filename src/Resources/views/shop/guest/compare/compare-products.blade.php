@@ -161,6 +161,11 @@
                         this.$http.get(url, data)
                         .then(response => {
                             this.isProductListLoaded = true;
+
+                            if (response.data.products.length > 3) {
+                                $('.compare-products').css('overflow-x', 'scroll');
+                            }
+
                             this.products = response.data.products;
                         })
                         .catch(error => {
